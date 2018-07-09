@@ -63,14 +63,16 @@ func (m StringLatestMap) Merge(n StringLatestMap) StringLatestMap {
 loop:
 	for i < lenm {
 		switch {
-		case j >= len(n) || m[i].key < n[j].key:
-			i++
+		case j >= len(n):
+			return m
 		case m[i].key == n[j].key:
 			if m[i].Timestamp.Before(n[j].Timestamp) {
 				break loop
 			}
 			i++
 			j++
+		case m[i].key < n[j].key:
+			i++
 		default:
 			break loop
 		}
@@ -84,9 +86,9 @@ loop:
 
 	for i < lenm {
 		switch {
-		case j >= len(n) || m[i].key < n[j].key:
-			out = append(out, m[i])
-			i++
+		case j >= len(n):
+			out = append(out, m[i:]...)
+			return out
 		case m[i].key == n[j].key:
 			if m[i].Timestamp.Before(n[j].Timestamp) {
 				out = append(out, n[j])
@@ -95,6 +97,9 @@ loop:
 			}
 			i++
 			j++
+		case m[i].key < n[j].key:
+			out = append(out, m[i])
+			i++
 		default:
 			out = append(out, n[j])
 			j++
@@ -309,14 +314,16 @@ func (m NodeControlDataLatestMap) Merge(n NodeControlDataLatestMap) NodeControlD
 loop:
 	for i < lenm {
 		switch {
-		case j >= len(n) || m[i].key < n[j].key:
-			i++
+		case j >= len(n):
+			return m
 		case m[i].key == n[j].key:
 			if m[i].Timestamp.Before(n[j].Timestamp) {
 				break loop
 			}
 			i++
 			j++
+		case m[i].key < n[j].key:
+			i++
 		default:
 			break loop
 		}
@@ -330,9 +337,9 @@ loop:
 
 	for i < lenm {
 		switch {
-		case j >= len(n) || m[i].key < n[j].key:
-			out = append(out, m[i])
-			i++
+		case j >= len(n):
+			out = append(out, m[i:]...)
+			return out
 		case m[i].key == n[j].key:
 			if m[i].Timestamp.Before(n[j].Timestamp) {
 				out = append(out, n[j])
@@ -341,6 +348,9 @@ loop:
 			}
 			i++
 			j++
+		case m[i].key < n[j].key:
+			out = append(out, m[i])
+			i++
 		default:
 			out = append(out, n[j])
 			j++
