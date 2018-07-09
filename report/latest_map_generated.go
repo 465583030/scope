@@ -47,14 +47,16 @@ func (m StringLatestMap) Size() int {
 // Tries to return one of its inputs, if that already holds the correct result.
 func (m StringLatestMap) Merge(n StringLatestMap) StringLatestMap {
 	switch {
-	case m == nil:
+	case len(m) == 0:
 		return n
-	case n == nil:
+	case len(n) == 0:
 		return m
 	}
 	lenm := len(m)
 	if len(n) > lenm {
 		m, n, lenm = n, m, len(n) //swap so m is always at least as long as n
+	} else if len(n) == lenm && m[0].Timestamp.Before(n[0].Timestamp) {
+		m, n = n, m // swap equal-length arrays so first element of m is newer
 	}
 
 	i, j := 0, 0
@@ -291,14 +293,16 @@ func (m NodeControlDataLatestMap) Size() int {
 // Tries to return one of its inputs, if that already holds the correct result.
 func (m NodeControlDataLatestMap) Merge(n NodeControlDataLatestMap) NodeControlDataLatestMap {
 	switch {
-	case m == nil:
+	case len(m) == 0:
 		return n
-	case n == nil:
+	case len(n) == 0:
 		return m
 	}
 	lenm := len(m)
 	if len(n) > lenm {
 		m, n, lenm = n, m, len(n) //swap so m is always at least as long as n
+	} else if len(n) == lenm && m[0].Timestamp.Before(n[0].Timestamp) {
+		m, n = n, m // swap equal-length arrays so first element of m is newer
 	}
 
 	i, j := 0, 0
